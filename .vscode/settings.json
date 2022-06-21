@@ -29,6 +29,12 @@
 		"arg8": "#",
 	},
 	"files.associations": {
-		"stdlib.h": "c"
+		"stdlib.h": "c",
+		"typeinfo": "c",
+		"type_traits": "c"
 	},
+	"cSpell.words": [
+		"STPS",
+		"uninitializes"
+	],
 }
