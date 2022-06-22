@@ -7,6 +7,9 @@
 # Ολα τα directories μέσα στο programs directory
 PROGRAMS = $(subst programs/, , $(wildcard programs/*))
 
+PACKAGE = step_count_1.0
+OBJS = modules/step_count.o
+
 # Compile: όλα, προγράμματα, tests
 all: programs tests
 
@@ -30,6 +33,9 @@ run-programs: $(addprefix run-programs-, $(PROGRAMS))
 
 run-tests:
 	$(MAKE) -C tests run
+
+package:
+	ar rcs lib/$(PACKAGE).a $(OBJS)
 
 # Εκκαθάριση
 clean-programs-%:
