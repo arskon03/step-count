@@ -1,6 +1,7 @@
 #pragma once
 
-typedef char byte;
+#include <stdint.h>
+typedef uint8_t byte;
 
 //  -------------
 //  MACROS TO USE
@@ -10,20 +11,22 @@ typedef char byte;
 #define STPS_REAL 0
 #define STPS_AMOR 1
 
-// This should be used to start the counting in main before functions using the below macros are called
-// Type signifies if we are calculating amortized or real time complexity
-#define STPS_START(type) start_count(type)
+// This should be used to start the counting of real time complexity in main before functions using the below macros are called
+#define STPS_START_REAL start_count(STPS_REAL)
+
+// This should be used to start the counting of amortized complexity in main before functions using the below macros are called
+#define STPS_START_AMOR start_count(STPS_AMOR)
 
 // This should be used to after the counting has stopped in main so memory is freed
 // Type signifies if we are calculating amortized or real time complexity
-#define STPS_END() end_count()
+#define STPS_END end_count()
 
 // This should be used at the start of a function that has constant time (aka O(1): no loops, loops w/constant limits etc.)
-// n >= 0 if used or < 0 to remain unused, name == NULL to remain unused
+// n > 0 for amortized, n >= 0 for real time, name == NULL to remain unused
 #define STPS_FUNC_CONST(name, n) set_count(name, n, 1)
 
 // This should be used at the start of a function that has operations which depend on a variable (aka O(f(n)) loops etc.)
-// n >= 0 if used or < 0 to remain unused, name == NULL to remain unused
+// n > 0 for amortized, n >= 0 for real time, name == NULL to remain unused
 #define STPS_FUNC_VARIA(name, n) set_count(name, n, 0)
 
 // This is a step. Should be added inside loops and NOT in functions that initialized with the "STPS_FUNC" macro
@@ -34,6 +37,12 @@ typedef char byte;
 
 // This gets the amount of total steps completed since init
 #define STPS_GET_TOTAL get_total()
+
+// This prints the values held in the counter to the console
+#define STPS_PRINT_CONSOLE print_counter_results(NULL)
+
+// This prints the values held in the counter to the console
+#define STPS_PRINT_DIR(dir) print_counter_results(dir)
 
 //  --------------------
 //  UNDERLYING FUNCTIONS
@@ -56,6 +65,10 @@ long long get_steps();
 
 // Function that returns the total steps of the counter
 long long get_total();
+
+// Function that prints the results of the counter
+// If dir == NULL: print in console
+void print_counter_results(char* dir);
 
 
 

@@ -1,4 +1,6 @@
 #include <stdio.h>
+#include <stdlib.h>
+#include <assert.h>
 #include <string.h>
 #include <stdbool.h>
 #include "step_count.h"
@@ -44,6 +46,7 @@ void uninit_counter(StepCounter counter)
         free(counter->name);
 
     free(counter);
+    counter = NULL;
 }
 
 // Function that sets the counter to specified values
@@ -93,6 +96,67 @@ long long getter_total(StepCounter counter)
     return counter->total;
 }
 
+void print_counter(StepCounter counter, char* dir)
+{
+    if (counter == NULL)
+        return;
+
+    // Check if file is needed
+    FILE* file = NULL;
+    bool to_file = dir != NULL;
+
+    // If it is
+    if (to_file)
+    {
+        // Open at the directory provided and set the cursor at the end of the file
+        file = fopen(dir, "a+");
+
+        // If anything goes wring end function
+        assert(file != NULL);
+        assert(!fseek(file, 0, SEEK_END));
+    }
+
+    // Print name if needed
+    if (counter->name != NULL)
+    {
+        if (!to_file)
+            printf("(%s) ", counter->name);
+        else
+            fprintf(file, "(%s) ", counter->name);
+    }
+        
+
+    // Print n and make sure it is not negative
+    assert(counter->n >= 0);
+    if (!to_file)
+        printf("n(%s) = %lld,", (counter->type == STPS_AMOR) ? "executions" : "values", counter->n);
+    else
+        fprintf(file, "n(%s) = %lld,", (counter->type == STPS_AMOR) ? "executions" : "values", counter->n);
+
+    // If type is amortized, make sure n>0 and print average steps
+    if (counter->type == STPS_AMOR)
+    {
+        assert(counter->n > 0);
+        if (!to_file)
+            printf("%lld\n", counter->total / counter->n);
+        else
+            fprintf(file, "%lld\n", counter->total / counter->n);
+    }
+    // Else if its is real time print steps
+    else
+    {
+        if (!to_file)
+            printf("%lld\n", counter->steps);
+        else
+            fprintf(file, "%lld\n", counter->steps);
+    }
+
+    // Close file
+    if (to_file)
+        assert(fclose(file) == 0);  
+
+}
+
 //  ----------------
 //  HEADER FUNCTIONS
 //  ----------------
@@ -126,3 +190,30 @@ long long get_total()
 {
     return getter_total(counter);
 }
+
+void print_counter_results(char* dir)
+{
+    print_counter(counter, dir);
+}
+
+void get_counter_values(StepCounter counter, long long* n, long long* steps, long long* total, byte* type, char** name)
+{
+    *n = counter->n;
+    *steps = counter->steps;
+    *total = counter->total;
+    *type = counter->type;
+    *name = counter->name;
+}
+
+//  --------------
+//  TEST FUNCTIONS
+//  --------------
+
+// LCOV_EXCL_START
+
+void get_debug_values(long long* n, long long* steps, long long* total, byte* type, char** name)
+{
+    get_counter_values(counter, n, steps, total, type, name);
+}
+
+// LCOV_EXCL_STOP
