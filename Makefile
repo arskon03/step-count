@@ -9,6 +9,7 @@ PROGRAMS = $(subst programs/, , $(wildcard programs/*))
 
 PACKAGE = step_count_1.0
 OBJS = modules/step_count.o
+HEADERS = include/step_count.h
 
 # Compile: όλα, προγράμματα, tests
 all: programs tests
@@ -36,6 +37,7 @@ run-tests:
 
 package:
 	ar rcs lib/$(PACKAGE).a $(OBJS)
+	zip step_counter_v1.0.zip lib/$(PACKAGE).a $(HEADERS)
 
 # Εκκαθάριση
 clean-programs-%:
