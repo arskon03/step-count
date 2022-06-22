@@ -37,7 +37,7 @@ run-tests:
 
 package:
 	ar rcs lib/$(PACKAGE).a $(OBJS)
-	zip step_counter_v1.0.zip lib/$(PACKAGE).a $(HEADERS)
+	zip ./download/step_counter_v1.0.zip lib/$(PACKAGE).a $(HEADERS)
 
 # Εκκαθάριση
 clean-programs-%:
