@@ -18,4 +18,3 @@
 !.gitignore
 !README.md
 !.vscode/*.json
-!*.csv
